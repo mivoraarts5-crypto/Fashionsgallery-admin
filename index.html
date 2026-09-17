@@ -4,9 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Fashion Gallery — Mobile App Console</title>
+
+<!-- PWA Meta Tags -->
+<meta name="theme-color" content="#0f172a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="FG Admin">
+
+<!-- Embedded PWA Web Manifest -->
+<link rel="manifest" href='data:application/manifest+json,{"name":"Fashion Gallery Admin","short_name":"FG Admin","start_url":".","display":"standalone","background_color":"#0f172a","theme_color":"#0f172a","icons":[{"src":"https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=192&h=192&fit=crop","sizes":"192x192","type":"image/png"},{"src":"https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=512&h=512&fit=crop","sizes":"512x512","type":"image/png"}]}'>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
 <style>
 :root{
   --bg:#f1f3f7;--surface:#ffffff;--border:#e2e8f0;--border-light:#f1f5f9;
@@ -28,22 +40,23 @@ button{cursor:pointer}
 .app-header{
   position:sticky;top:0;z-index:40;height:54px;
   background:#0f172a;color:#fff;display:flex;align-items:center;
-  justify-content:space-between;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,0.08);
+  justify-content:space-between;padding:0 14px;box-shadow:0 2px 8px rgba(0,0,0,0.08);
 }
 .app-brand{display:flex;align-items:center;gap:10px}
 .app-logo{
   width:32px;height:32px;background:var(--primary);color:#fff;
   border-radius:8px;display:grid;place-items:center;font-weight:800;font-size:14px;
 }
-.app-brand-text b{display:block;font-size:14.5px;font-weight:700;line-height:1.1}
-.app-brand-text span{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.app-brand-text b{display:block;font-size:14px;font-weight:700;line-height:1.1}
+.app-brand-text span{font-size:9.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.header-actions{display:flex;align-items:center;gap:6px}
 .app-header-action{
   background:rgba(255,255,255,0.12);border:0;color:#fff;
-  padding:6px 10px;border-radius:6px;font-size:12px;font-weight:600;
+  padding:5px 9px;border-radius:6px;font-size:11.5px;font-weight:600;
 }
 
 .page-container{padding:12px;max-width:680px;margin:auto}
-.page-title{font-size:16px;font-weight:800;margin:6px 0 12px;color:var(--ink)}
+.page-title{font-size:15.5px;font-weight:800;margin:6px 0 12px;color:var(--ink)}
 
 /* Hero Revenue */
 .hero-revenue{
@@ -52,7 +65,7 @@ button{cursor:pointer}
   box-shadow:0 4px 14px rgba(5,150,105,0.22);
 }
 .hero-revenue small{font-size:12px;opacity:.9;display:block}
-.hero-revenue b{font-size:26px;font-weight:800;letter-spacing:-.4px;margin-top:2px;display:block}
+.hero-revenue b{font-size:25px;font-weight:800;letter-spacing:-.4px;margin-top:2px;display:block}
 
 /* Stats Grid */
 .stats-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:8px;margin-bottom:14px}
@@ -80,7 +93,7 @@ button{cursor:pointer}
 }
 .pill.active{background:#0f172a;color:#fff}
 
-/* 20% Opacity Backgrounds Per Stage */
+/* 20% Opacity Backgrounds per Stage */
 .order-card{
   border-radius:12px;padding:10px 12px;margin-bottom:8px;
   box-shadow:0 1px 3px rgba(0,0,0,0.02);border:1.5px solid transparent;
@@ -118,7 +131,7 @@ button{cursor:pointer}
   border-top:1px dashed rgba(0,0,0,0.08);padding-top:6px;margin-top:4px;
 }
 .sf-pill{background:#e0f2fe;color:#0369a1;padding:3px 6px;border-radius:4px;font-size:10px;font-family:monospace;font-weight:700;border:1px solid #bae6fd}
-.btn-sf{background:#0284c7;color:#fff;border:0;border-radius:5px;padding:4px 8px;font-size:11px;font-weight:700}
+.btn-sf{background:#0284c7;color:#fff;border:0;border-radius:5px;padding:5px 9px;font-size:11px;font-weight:700}
 .btn-sf:disabled{opacity:0.6;cursor:not-allowed}
 .action-btns{display:flex;align-items:center;gap:4px}
 .btn-mini{background:#fff;border:1px solid var(--border);border-radius:5px;padding:3px 7px;font-size:11px;font-weight:700}
@@ -162,6 +175,7 @@ button{cursor:pointer}
 </head>
 <body>
 
+<!-- Login Section -->
 <div id="loginSection" class="login-screen">
   <div class="login-card">
     <div class="app-logo" style="margin:0 auto 12px;width:42px;height:42px;font-size:16px">FG</div>
@@ -182,11 +196,14 @@ button{cursor:pointer}
         <span>Admin Console</span>
       </div>
     </div>
-    <button id="refreshBtn" class="app-header-action">↻ রিফ্রেশ</button>
+    <div class="header-actions">
+      <button id="btnPwaInstall" class="app-header-action hidden" style="background:var(--primary)">📲 ইনস্টল</button>
+      <button id="refreshBtn" class="app-header-action">↻ রিফ্রেশ</button>
+    </div>
   </header>
 
   <main class="page-container">
-    <!-- TAB 1: DASHBOARD (ONLY PENDING ORDERS LISTED) -->
+    <!-- TAB 1: DASHBOARD -->
     <section id="viewDashboard">
       <div class="hero-revenue">
         <small>সর্বমোট রেভিনিউ (শুধুমাত্র Delivered)</small>
@@ -215,7 +232,7 @@ button{cursor:pointer}
       <div id="pendingOrdersList"></div>
     </section>
 
-    <!-- TAB 2: ORDERS (ALL ORDERS) -->
+    <!-- TAB 2: ORDERS -->
     <section id="viewOrders" class="hidden">
       <div class="search-wrapper">
         <input id="orderSearch" class="input" placeholder="আইডি, নাম, ফোন দিয়ে খুঁজুন...">
@@ -229,12 +246,12 @@ button{cursor:pointer}
     <section id="viewSettings" class="hidden">
       <div class="settings-box">
         <h3>🚚 Steadfast Courier API</h3>
-        <p style="font-size:12px;color:var(--ink-soft);margin-top:0">Steadfast মার্চেন্ট অ্যাকাউন্ট থেকে API ও Secret Key সংগ্রহ করুন।</p>
+        <p style="font-size:12px;color:var(--ink-soft);margin-top:0">Steadfast মার্চেন্ট প্যানেলের API Key ও Secret Key দিন।</p>
         <form id="steadfastForm">
           <label style="font-size:12px;font-weight:700">API Key</label>
-          <input id="sfApiKey" class="input" style="margin:4px 0 10px" placeholder="Steadfast API Key" required>
+          <input id="sfApiKey" class="input" style="margin:4px 0 10px" placeholder="Steadfast API Key দিন" required>
           <label style="font-size:12px;font-weight:700">Secret Key</label>
-          <input id="sfSecretKey" class="input" type="password" style="margin:4px 0 10px" placeholder="Steadfast Secret Key" required>
+          <input id="sfSecretKey" class="input" type="password" style="margin:4px 0 10px" placeholder="Steadfast Secret Key দিন" required>
           <label style="font-size:12px;font-weight:700">Base URL</label>
           <input id="sfBaseUrl" class="input" style="margin:4px 0 12px" value="https://portal.steadfast.com.bd/api/v1">
           <div style="display:flex;gap:8px">
@@ -251,6 +268,12 @@ button{cursor:pointer}
           <input id="pixelId" class="input" style="margin:4px 0 14px" placeholder="123456789012345">
           <button class="btn-sf" style="width:100%;padding:10px;background:var(--ink)" type="submit">Pixel সংরক্ষণ করুন</button>
         </form>
+      </div>
+
+      <div class="settings-box">
+        <h3>📲 মোবাইল অ্যাপ ইনস্টলেশন</h3>
+        <p style="font-size:12px;color:var(--ink-soft);margin-top:0">ব্রাউজার ছাড়াই ফোনের হোমস্ক্রিন থেকে সরাসরি ব্যবহার করুন।</p>
+        <button id="btnPwaInstallSettings" class="btn-sf" style="width:100%;padding:11px;background:#0f172a">📲 ফোনে অ্যাপ ইনস্টল করুন</button>
       </div>
 
       <button id="logoutBtn" class="q-btn" style="width:100%;color:#dc2626;border-color:#fecaca;padding:12px">
@@ -277,6 +300,38 @@ button{cursor:pointer}
 
 <div id="invoiceModal" class="modal-overlay hidden"><div class="modal-card" id="invoiceCard"></div></div>
 <div id="toast" class="toast-bar hidden"></div>
+
+<!-- PWA Registration Script -->
+<script>
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  const btn = document.getElementById('btnPwaInstall');
+  if (btn) btn.classList.remove('hidden');
+});
+
+function triggerPwaInstall() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
+  } else {
+    alert("আপনার ব্রাউজারের থ্রি-ডট (⋮) মেনু থেকে 'Add to Home Screen' অথবা 'Install App'-এ ট্যাপ করুন।");
+  }
+}
+document.getElementById('btnPwaInstall')?.addEventListener('click', triggerPwaInstall);
+document.getElementById('btnPwaInstallSettings')?.addEventListener('click', triggerPwaInstall);
+
+if ('serviceWorker' in navigator) {
+  const swCode = `
+    self.addEventListener('install', e => self.skipWaiting());
+    self.addEventListener('activate', e => self.clients.claim());
+    self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));
+  `;
+  const blob = new Blob([swCode], { type: 'application/javascript' });
+  navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
+}
+</script>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
@@ -311,13 +366,13 @@ function toast(msg, err = false) {
   t.className = "toast-bar" + (err ? " err" : "");
   t.classList.remove("hidden");
   clearTimeout(window.__t);
-  window.__t = setTimeout(() => t.classList.add("hidden"), 3200);
+  window.__t = setTimeout(() => t.classList.add("hidden"), 3000);
 }
 
 function money(v) { return "৳ " + Number(v || 0).toLocaleString("en-US"); }
 function escapeHtml(v) { return String(v ?? "").replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[m])); }
 
-// Phone sanitization strictly for Steadfast: must be 11 digits starting with 01
+// Strictly format phone for Steadfast: must be 11 digits starting with 01
 function formatPhoneForSteadfast(p) {
   let s = String(p || "").replace(/\D/g, "");
   if (s.startsWith("880")) s = s.slice(2);
@@ -390,7 +445,6 @@ function listenOrders() {
 }
 
 function updateDashboardMetrics() {
-  // Revenue is ONLY for Delivered Orders
   const deliveredOrders = orders.filter(o => o.status === "Delivered");
   const rev = deliveredOrders.reduce((sum, o) => sum + Number(o.totalAmount || 0), 0);
   $("dashRevenue").textContent = money(rev);
@@ -403,7 +457,7 @@ function updateDashboardMetrics() {
   });
   if ($("p-all")) $("p-all").textContent = orders.length;
 
-  // ONLY PENDING ORDERS DISPLAYED ON DASHBOARD
+  // DASHBOARD ONLY SHOWS PENDING ORDERS
   const pendingOrders = orders.filter(o => o.status === "Pending");
   $("dashPendingCount").textContent = pendingOrders.length;
   
@@ -440,7 +494,6 @@ function renderOrdersView() {
   attachCardEvents();
 }
 
-// Card Background: 20% Opacity Color by Stage
 function renderCard(o) {
   const phone = escapeHtml(o.phone);
   const cleanPhone = formatPhoneForSteadfast(o.phone);
@@ -450,7 +503,7 @@ function renderCard(o) {
   const sfBooked = Boolean(o.steadfastTracking || o.steadfastConsignmentId);
   const sfHtml = sfBooked
     ? `<span class="sf-pill">✓ SF: ${escapeHtml(o.steadfastTracking || o.steadfastConsignmentId)}</span>`
-    : `<button class="btn-sf" data-sf="${escapeHtml(o.orderId)}">🚚 Steadfast এ পাঠান</button>`;
+    : `<button class="btn-sf" data-sf-id="${escapeHtml(o.id)}">🚚 Steadfast এ পাঠান</button>`;
 
   const stageClass = `stage-${escapeHtml(o.status || 'Pending')}`;
   const badgeClass = `badge-${escapeHtml(o.status || 'Pending')}`;
@@ -458,7 +511,7 @@ function renderCard(o) {
   return `
     <div class="order-card ${stageClass}">
       <div class="card-top">
-        <span class="id-badge">#${escapeHtml(o.orderId)}</span>
+        <span class="id-badge">#${escapeHtml(o.orderId || o.id)}</span>
         <span class="status-tag ${badgeClass}">${escapeHtml(bnStatus[o.status] || "পেন্ডিং")}</span>
       </div>
       <div class="card-body">
@@ -478,11 +531,11 @@ function renderCard(o) {
       <div class="card-footer">
         <div>${sfHtml}</div>
         <div class="action-btns">
-          <select class="select" style="width:auto;padding:2px 6px;font-size:11px;font-weight:700" data-status-change="${escapeHtml(o.orderId)}">
+          <select class="select" style="width:auto;padding:2px 6px;font-size:11px;font-weight:700" data-status-change="${escapeHtml(o.id)}">
             ${statusList.map(s => `<option value="${s}" ${o.status === s ? 'selected' : ''}>${bnStatus[s]}</option>`).join('')}
           </select>
-          <button class="btn-mini" data-invoice="${escapeHtml(o.orderId)}">🖨</button>
-          <button class="btn-mini" style="color:#dc2626" data-del="${escapeHtml(o.orderId)}">🗑</button>
+          <button class="btn-mini" data-invoice="${escapeHtml(o.id)}">🖨</button>
+          <button class="btn-mini" style="color:#dc2626" data-del-id="${escapeHtml(o.id)}" data-order-code="${escapeHtml(o.orderId || o.id)}">🗑</button>
         </div>
       </div>
     </div>
@@ -491,103 +544,108 @@ function renderCard(o) {
 
 function attachCardEvents() {
   document.querySelectorAll("[data-status-change]").forEach(el => el.onchange = e => updateOrderStatus(e.target.dataset.statusChange, e.target.value));
-  document.querySelectorAll("[data-del]").forEach(el => el.onclick = () => deleteOrder(el.dataset.del));
-  document.querySelectorAll("[data-invoice]").forEach(el => el.onclick = () => showInvoice(orders.find(o => o.orderId === el.dataset.invoice)));
-  document.querySelectorAll("[data-sf]").forEach(el => el.onclick = () => sendToSteadfast(el.dataset.sf, el));
+  document.querySelectorAll("[data-del-id]").forEach(el => el.onclick = () => deleteOrder(el.dataset.delId, el.dataset.orderCode));
+  document.querySelectorAll("[data-invoice]").forEach(el => el.onclick = () => showInvoice(orders.find(o => o.id === el.dataset.invoice || o.orderId === el.dataset.invoice)));
+  document.querySelectorAll("[data-sf-id]").forEach(el => el.onclick = () => sendToSteadfast(el.dataset.sfId, el));
 }
 
-async function updateOrderStatus(id, status) {
+async function updateOrderStatus(docId, status) {
   try {
-    await updateDoc(doc(db, "orders", id), { status });
+    await updateDoc(doc(db, "orders", docId), { status });
     toast(`স্ট্যাটাস: ${bnStatus[status]}`);
   } catch (e) { toast("আপডেট ব্যর্থ", true); }
 }
 
-async function deleteOrder(id) {
-  if (!confirm(`অর্ডার #${id} মুছে ফেলবেন?`)) return;
+// -------------------------------------------------------------
+// ISSUE 1 RESOLUTION: BULLETPROOF FIRESTORE DELETE
+// -------------------------------------------------------------
+async function deleteOrder(docId, orderCode) {
+  if (!confirm(`অর্ডার #${orderCode || docId} কি নিশ্চিতভাবে ডিলিট করতে চান?`)) return;
+
   try {
-    await deleteDoc(doc(db, "orders", id));
-    toast("অর্ডার মুছে ফেলা হয়েছে");
-  } catch (e) { toast("মুছতে সমস্যা হয়েছে", true); }
+    // Primary delete using actual Firestore document ID
+    await deleteDoc(doc(db, "orders", docId));
+    
+    // Cleanup fallback if orderCode exists as a document ID
+    if (orderCode && orderCode !== docId) {
+      try { await deleteDoc(doc(db, "orders", orderCode)); } catch (_) {}
+    }
+    
+    toast("অর্ডার সফলভাবে মুছে ফেলা হয়েছে");
+  } catch (err) {
+    console.error("Delete Error:", err);
+    if (err.code === "permission-denied") {
+      alert("⚠️ Firebase Rules Error: ফায়ারবেসের সিকিউরিটি রুলস-এ ডিলিট করার অনুমতি নেই।\n\nসমাধান: Firebase Console > Firestore > Rules-এ গিয়ে নিশ্চিত করুন 'allow delete: if true;' করা আছে।");
+    } else {
+      alert("ডিলিট করা যায়নি: " + (err.message || err));
+    }
+    toast("মুছতে সমস্যা হয়েছে", true);
+  }
 }
 
 // -------------------------------------------------------------
-// STEADFAST ROBUST API CLIENT (CORS BYPASS ENGINE)
+// ISSUE 2 RESOLUTION: STEADFAST 100% RELIABLE API DISPATCHER
 // -------------------------------------------------------------
-async function dispatchToSteadfast(endpoint, method = "POST", bodyData = null) {
+async function callSteadfastApi(endpoint, method = "POST", bodyData = null) {
   const headers = {
     "Content-Type": "application/json",
     "Api-Key": sfConfig.apiKey,
     "Secret-Key": sfConfig.secretKey
   };
 
-  const payloadString = bodyData ? JSON.stringify(bodyData) : null;
+  const payload = bodyData ? JSON.stringify(bodyData) : null;
 
-  // Layer 1: CodeTabs CORS Proxy (Bypasses preflight restrictions & transfers custom headers cleanly)
+  // Primary Gateway: corsproxy.io forwards custom Api-Key & Secret-Key accurately
+  const proxyUrl = "https://corsproxy.io/?url=" + encodeURIComponent(endpoint);
+  
+  let rawText = "";
   try {
-    const proxyUrl = "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(endpoint);
     const res = await fetch(proxyUrl, {
       method,
       headers,
-      body: payloadString
+      body: payload
     });
-    if (res.ok) {
-      const json = await res.json();
-      return json;
-    }
-  } catch (err1) {
-    console.warn("Proxy 1 failed, trying fallback...", err1);
-  }
-
-  // Layer 2: AllOrigins Backup
-  try {
-    const backupUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(endpoint);
-    const res2 = await fetch(backupUrl, {
+    rawText = await res.text();
+  } catch (err) {
+    // Fallback: Direct call
+    const resDirect = await fetch(endpoint, {
       method,
       headers,
-      body: payloadString
+      body: payload
     });
-    if (res2.ok) {
-      return await res2.json();
-    }
-  } catch (err2) {
-    console.warn("Proxy 2 failed, trying direct...", err2);
+    rawText = await resDirect.text();
   }
 
-  // Layer 3: Direct Fetch Attempt
-  const res3 = await fetch(endpoint, {
-    method,
-    headers,
-    body: payloadString
-  });
-  return await res3.json();
+  try {
+    return JSON.parse(rawText);
+  } catch (e) {
+    throw new Error("সার্ভার অপ্রত্যাশিত উত্তর দিয়েছে:\n" + rawText.slice(0, 180));
+  }
 }
 
-// 1-Click Send To Steadfast
-async function sendToSteadfast(id, btnElement) {
+// 1-Click Send To Steadfast with Duplicate Handling
+async function sendToSteadfast(docId, btnElement) {
   if (!sfConfig.apiKey || !sfConfig.secretKey) {
     alert("আগে সেটিংস ট্যাবে গিয়ে Steadfast API Key এবং Secret Key সেভ করুন!");
     switchAppTab("settings");
     return;
   }
 
-  const o = orders.find(x => x.orderId === id);
+  const o = orders.find(x => x.id === docId);
   if (!o) return;
 
-  // Strict Phone Validation: 11 Digits
   const formattedPhone = formatPhoneForSteadfast(o.phone);
   if (formattedPhone.length !== 11 || !formattedPhone.startsWith("01")) {
     alert(`গ্রাহকের মোবাইল নম্বর সঠিক নয়: "${o.phone}"\nSteadfast-এর জন্য সঠিক ১১ ডিজিটের নম্বর দিন (যেমন: 01712345678)`);
     return;
   }
 
-  // Strict Address Validation: Steadfast requires at least 10 characters
   let address = String(o.address || "").trim();
   if (address.length < 10) {
     address = address + ", Bangladesh";
   }
 
-  if (!confirm(`অর্ডার #${o.orderId} কি Steadfast এ কনসাইনমেন্ট করবেন?`)) return;
+  if (!confirm(`অর্ডার #${o.orderId || o.id} কি Steadfast এ পাঠাতে চান?`)) return;
 
   if (btnElement) {
     btnElement.disabled = true;
@@ -595,8 +653,9 @@ async function sendToSteadfast(id, btnElement) {
   }
   toast("Steadfast-এ প্রসেস হচ্ছে...");
 
+  let invoiceId = String(o.orderId || o.id);
   const payload = {
-    invoice: String(o.orderId),
+    invoice: invoiceId,
     recipient_name: String(o.customerName || "Customer").slice(0, 80),
     recipient_phone: formattedPhone,
     recipient_address: address,
@@ -607,11 +666,21 @@ async function sendToSteadfast(id, btnElement) {
   const endpoint = `${(sfConfig.baseUrl || "https://portal.steadfast.com.bd/api/v1").replace(/\/+$/, '')}/create_order`;
 
   try {
-    const data = await dispatchToSteadfast(endpoint, "POST", payload);
+    let data = await callSteadfastApi(endpoint, "POST", payload);
+
+    // Duplicate invoice auto-retry handling
+    let errCheck = JSON.stringify(data || {});
+    if (errCheck.includes("already been taken") || errCheck.includes("invoice duplicate")) {
+      const retryInvoice = invoiceId + "-" + Math.floor(10 + Math.random() * 89);
+      if (confirm(`এই ইনভয়েস (${invoiceId}) আগে Steadfast-এ ব্যবহৃত হয়েছে। নতুন সাফিক্স "${retryInvoice}" দিয়ে পাঠাবেন?`)) {
+        payload.invoice = retryInvoice;
+        data = await callSteadfastApi(endpoint, "POST", payload);
+      }
+    }
 
     if (data && (data.status === 200 || data.consignment)) {
       const c = data.consignment || {};
-      await updateDoc(doc(db, "orders", id), {
+      await updateDoc(doc(db, "orders", docId), {
         steadfastConsignmentId: c.consignment_id || "BOOKED",
         steadfastTracking: c.tracking_code || "",
         status: "Shipped",
@@ -624,12 +693,12 @@ async function sendToSteadfast(id, btnElement) {
       if (data?.errors) {
         errMsg += " " + Object.values(data.errors).flat().join(", ");
       }
-      alert("Steadfast রিজেক্ট করেছে:\n" + (errMsg || "অনুগ্রহ করে API Key ও তথ্য পুনরায় যাচাই করুন।"));
+      alert("Steadfast রিজেক্ট করেছে:\n" + (errMsg || JSON.stringify(data)));
       toast("Steadfast এ যায়নি", true);
     }
   } catch (err) {
     console.error(err);
-    alert("Steadfast API সংযোগ ব্যর্থ হয়েছে। আপনার ইন্টারনেট কানেকশন বা API Key চেক করুন।");
+    alert("Steadfast সংযোগে সমস্যা:\n" + err.message);
     toast("Steadfast সংযোগ ব্যর্থ", true);
   } finally {
     if (btnElement) {
@@ -658,7 +727,7 @@ $("btnTestSfConnection").onclick = async () => {
   const endpoint = `${base.replace(/\/+$/, '')}/get_balance`;
 
   try {
-    const data = await dispatchToSteadfast(endpoint, "GET");
+    const data = await callSteadfastApi(endpoint, "GET");
     if (data && (data.status === 200 || data.current_balance !== undefined)) {
       alert(`✅ Steadfast সংযোগ সফল!\nবর্তমান ব্যালেন্স: ৳ ${data.current_balance ?? 0}`);
       toast("কানেকশন সফল!");
@@ -666,11 +735,11 @@ $("btnTestSfConnection").onclick = async () => {
       alert("সংযোগ ব্যর্থ: " + (data?.message || "ভুল API Key বা Secret Key দেওয়া হয়েছে।"));
     }
   } catch (e) {
-    alert("সার্ভারে পৌঁছানো যায়নি। অনুগ্রহ করে API credentials ঠিক আছে কিনা দেখুন।");
+    alert("Steadfast সংযোগে সমস্যা:\n" + e.message);
   }
 };
 
-// Steadfast Config
+// Steadfast Config Save
 async function loadSteadfastConfig() {
   try {
     const snap = await getDoc(doc(db, "settings", "steadfast"));
@@ -695,7 +764,7 @@ $("steadfastForm").onsubmit = async (e) => {
   } catch (e) { toast("সেভ ব্যর্থ", true); }
 };
 
-// Navigation
+// App Tabs Navigation
 function switchAppTab(tabName) {
   $("viewDashboard").classList.toggle("hidden", tabName !== "dashboard");
   $("viewOrders").classList.toggle("hidden", tabName !== "orders");
@@ -736,7 +805,7 @@ $("dashTestOrder").onclick = async () => {
 $("dashExportCsv").onclick = () => {
   if (!orders.length) return toast("কোনো অর্ডার নেই", true);
   const rows = [["Order ID", "Date", "Customer", "Phone", "Address", "Color", "Total", "Status", "Steadfast_Code"]];
-  orders.forEach(o => rows.push([o.orderId, o.orderDate || "", o.customerName, o.phone, `"${(o.address || "").replace(/"/g, '""')}"`, o.selectedColor, o.totalAmount, o.status, o.steadfastTracking || ""]));
+  orders.forEach(o => rows.push([o.orderId || o.id, o.orderDate || "", o.customerName, o.phone, `"${(o.address || "").replace(/"/g, '""')}"`, o.selectedColor, o.totalAmount, o.status, o.steadfastTracking || ""]));
   const csv = "\uFEFF" + rows.map(r => r.join(",")).join("\n");
   const a = document.createElement("a");
   a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8;" }));
@@ -744,13 +813,13 @@ $("dashExportCsv").onclick = () => {
   a.click();
 };
 
-// Invoice Modal
+// Print Invoice
 function showInvoice(o) {
   if (!o) return;
   $("invoiceCard").innerHTML = `
     <div style="display:flex;justify-content:space-between;border-bottom:1px solid #e2e8f0;padding-bottom:6px">
       <div><b>Fashion Gallery</b><br><small style="color:var(--muted)">ঢাকা</small></div>
-      <div style="text-align:right"><b>মেমো</b><br><small style="color:var(--muted)">#${escapeHtml(o.orderId)}</small></div>
+      <div style="text-align:right"><b>মেমো</b><br><small style="color:var(--muted)">#${escapeHtml(o.orderId || o.id)}</small></div>
     </div>
     <div style="font-size:12px;margin:8px 0">
       <b>${escapeHtml(o.customerName)}</b> (${escapeHtml(o.phone)})<br>
@@ -770,4 +839,4 @@ function showInvoice(o) {
 $("invoiceModal").onclick = e => { if (e.target.id === "invoiceModal") $("invoiceModal").classList.add("hidden"); };
 </script>
 </body>
-      </html>
+        </html>
