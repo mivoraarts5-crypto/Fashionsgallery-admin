@@ -1,0 +1,773 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Fashion Gallery — Mobile App Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f1f3f7;--surface:#ffffff;--border:#e2e8f0;--border-light:#f1f5f9;
+  --ink:#0f172a;--ink-soft:#475569;--muted:#94a3b8;
+  --primary:#e11d48;--primary-dark:#be123c;
+  --bottom-h:62px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{
+  margin:0;font-family:'Inter','Hind Siliguri',system-ui,sans-serif;
+  background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;
+  padding-bottom:calc(var(--bottom-h) + 16px);
+}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+
+/* Header */
+.app-header{
+  position:sticky;top:0;z-index:40;height:54px;
+  background:#0f172a;color:#fff;display:flex;align-items:center;
+  justify-content:space-between;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.app-brand{display:flex;align-items:center;gap:10px}
+.app-logo{
+  width:32px;height:32px;background:var(--primary);color:#fff;
+  border-radius:8px;display:grid;place-items:center;font-weight:800;font-size:14px;
+}
+.app-brand-text b{display:block;font-size:14.5px;font-weight:700;line-height:1.1}
+.app-brand-text span{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.app-header-action{
+  background:rgba(255,255,255,0.12);border:0;color:#fff;
+  padding:6px 10px;border-radius:6px;font-size:12px;font-weight:600;
+}
+
+.page-container{padding:12px;max-width:680px;margin:auto}
+.page-title{font-size:16px;font-weight:800;margin:6px 0 12px;color:var(--ink)}
+
+/* Hero Revenue */
+.hero-revenue{
+  background:linear-gradient(135deg, #059669, #047857);
+  color:#fff;border-radius:14px;padding:16px 18px;margin-bottom:12px;
+  box-shadow:0 4px 14px rgba(5,150,105,0.22);
+}
+.hero-revenue small{font-size:12px;opacity:.9;display:block}
+.hero-revenue b{font-size:26px;font-weight:800;letter-spacing:-.4px;margin-top:2px;display:block}
+
+/* Stats Grid */
+.stats-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:8px;margin-bottom:14px}
+.stat-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center}
+.stat-box b{font-size:18px;font-weight:800;display:block}
+.stat-box span{font-size:11px;color:var(--ink-soft);font-weight:600}
+
+.quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.q-btn{
+  background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  padding:10px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px;justify-content:center;
+}
+
+/* Search */
+.search-wrapper{display:flex;gap:6px;margin-bottom:8px}
+.input, .select{
+  width:100%;padding:8px 12px;border:1.2px solid var(--border);border-radius:8px;
+  background:#fff;font-size:13px;outline:none;
+}
+.input:focus, .select:focus{border-color:var(--primary)}
+.pill-list{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}
+.pill{
+  border:0;background:#e2e8f0;color:var(--ink-soft);padding:6px 12px;border-radius:999px;
+  font-size:11.5px;font-weight:700;white-space:nowrap;
+}
+.pill.active{background:#0f172a;color:#fff}
+
+/* 20% Opacity Backgrounds Per Stage */
+.order-card{
+  border-radius:12px;padding:10px 12px;margin-bottom:8px;
+  box-shadow:0 1px 3px rgba(0,0,0,0.02);border:1.5px solid transparent;
+}
+.stage-Pending { background: rgba(245, 158, 11, 0.20) !important; border-color: rgba(217, 119, 6, 0.40) !important; }
+.stage-Confirmed { background: rgba(16, 185, 129, 0.20) !important; border-color: rgba(5, 150, 105, 0.40) !important; }
+.stage-Processing { background: rgba(14, 165, 233, 0.20) !important; border-color: rgba(2, 132, 199, 0.40) !important; }
+.stage-Shipped { background: rgba(99, 102, 241, 0.20) !important; border-color: rgba(79, 70, 229, 0.40) !important; }
+.stage-Delivered { background: rgba(4, 120, 87, 0.20) !important; border-color: rgba(4, 120, 87, 0.45) !important; }
+.stage-Cancelled { background: rgba(239, 68, 68, 0.20) !important; border-color: rgba(220, 38, 38, 0.40) !important; }
+
+.card-top{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(0,0,0,0.06);padding-bottom:6px}
+.id-badge{font-family:monospace;font-size:12px;font-weight:800;background:#fff;padding:2px 6px;border-radius:4px;border:1px solid var(--border)}
+.status-tag{padding:3px 8px;border-radius:999px;font-size:10.5px;font-weight:800}
+.badge-Pending{background:#fffbeb;color:#b45309}
+.badge-Confirmed{background:#ecfdf5;color:#047857}
+.badge-Processing{background:#f0f9ff;color:#0284c7}
+.badge-Shipped{background:#eef2ff;color:#4338ca}
+.badge-Delivered{background:#d1fae5;color:#065f46}
+.badge-Cancelled{background:#fef2f2;color:#b91c1c}
+
+.card-body{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0}
+.cust-info{flex:1;min-width:0}
+.cust-name{font-weight:700;font-size:13.5px;line-height:1.2}
+.cust-phone{font-size:11.5px;color:var(--primary);text-decoration:none;font-weight:700;display:inline-block;margin-top:2px}
+.cust-address{font-size:11px;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.order-meta{display:flex;align-items:center;gap:8px}
+.order-meta img{width:40px;height:48px;object-fit:cover;border-radius:6px;border:1px solid var(--border);background:#fff}
+.order-price{text-align:right}
+.order-price b{font-size:13.5px;font-weight:800;display:block}
+.order-price span{font-size:10.5px;color:var(--ink-soft);font-weight:600}
+
+.card-footer{
+  display:flex;align-items:center;justify-content:space-between;gap:6px;
+  border-top:1px dashed rgba(0,0,0,0.08);padding-top:6px;margin-top:4px;
+}
+.sf-pill{background:#e0f2fe;color:#0369a1;padding:3px 6px;border-radius:4px;font-size:10px;font-family:monospace;font-weight:700;border:1px solid #bae6fd}
+.btn-sf{background:#0284c7;color:#fff;border:0;border-radius:5px;padding:4px 8px;font-size:11px;font-weight:700}
+.btn-sf:disabled{opacity:0.6;cursor:not-allowed}
+.action-btns{display:flex;align-items:center;gap:4px}
+.btn-mini{background:#fff;border:1px solid var(--border);border-radius:5px;padding:3px 7px;font-size:11px;font-weight:700}
+
+/* Settings */
+.settings-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px}
+.settings-box h3{margin:0 0 10px;font-size:15px;font-weight:800}
+
+/* Bottom Nav */
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;height:var(--bottom-h);
+  background:var(--surface);border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-around;
+  z-index:50;padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -2px 10px rgba(0,0,0,0.04);
+}
+.nav-item{
+  flex:1;border:0;background:transparent;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:3px;color:var(--muted);
+  padding:6px 0;font-size:11px;font-weight:700;
+}
+.nav-item svg{width:20px;height:20px;stroke-width:2.2}
+.nav-item.active{color:var(--primary)}
+
+/* Login */
+.login-screen{min-height:100vh;display:grid;place-items:center;background:#090d16;padding:16px}
+.login-card{width:min(340px,100%);background:var(--surface);padding:28px 22px;border-radius:16px;text-align:center}
+.login-card h2{margin:0 0 4px;font-size:18px}
+.login-card p{font-size:12px;color:var(--muted);margin:0 0 18px}
+.pin-input{width:100%;padding:10px;font-size:22px;text-align:center;letter-spacing:8px;border:2px solid var(--border);border-radius:8px;outline:none}
+
+.toast-bar{
+  position:fixed;top:16px;left:50%;transform:translateX(-50%);
+  background:#0f172a;color:#fff;padding:8px 16px;border-radius:30px;
+  font-size:12px;font-weight:700;z-index:100;box-shadow:0 4px 14px rgba(0,0,0,0.2);white-space:nowrap;
+}
+.toast-bar.err{background:#dc2626}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:grid;place-items:center;padding:16px;z-index:90}
+.modal-card{background:#fff;width:min(440px,100%);border-radius:12px;padding:18px}
+</style>
+</head>
+<body>
+
+<div id="loginSection" class="login-screen">
+  <div class="login-card">
+    <div class="app-logo" style="margin:0 auto 12px;width:42px;height:42px;font-size:16px">FG</div>
+    <h2>Admin Login</h2>
+    <p>Fashion Gallery মোবাইল কনসোল</p>
+    <input id="pinInput" class="pin-input" type="password" inputmode="numeric" maxlength="6" placeholder="••••">
+    <button id="pinSubmit" class="btn-sf" style="width:100%;margin-top:14px;padding:11px;background:var(--primary)">প্রবেশ করুন</button>
+    <p id="pinErr" style="color:#dc2626;font-size:11.5px;font-weight:700;margin-top:10px"></p>
+  </div>
+</div>
+
+<div id="mainApp" class="hidden">
+  <header class="app-header">
+    <div class="app-brand">
+      <div class="app-logo">FG</div>
+      <div class="app-brand-text">
+        <b>Fashion Gallery</b>
+        <span>Admin Console</span>
+      </div>
+    </div>
+    <button id="refreshBtn" class="app-header-action">↻ রিফ্রেশ</button>
+  </header>
+
+  <main class="page-container">
+    <!-- TAB 1: DASHBOARD (ONLY PENDING ORDERS LISTED) -->
+    <section id="viewDashboard">
+      <div class="hero-revenue">
+        <small>সর্বমোট রেভিনিউ (শুধুমাত্র Delivered)</small>
+        <b id="dashRevenue">৳ 0</b>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-box"><b id="cntTotal">0</b><span>মোট অর্ডার</span></div>
+        <div class="stat-box" style="background:#fffbeb"><b id="cntPending" style="color:#d97706">0</b><span>পেন্ডিং</span></div>
+        <div class="stat-box"><b id="cntConfirmed" style="color:#059669">0</b><span>কনফার্মড</span></div>
+        <div class="stat-box"><b id="cntShipped" style="color:#4f46e5">0</b><span>শিপড</span></div>
+        <div class="stat-box"><b id="cntDelivered" style="color:#047857">0</b><span>ডেলিভার্ড</span></div>
+        <div class="stat-box"><b id="cntCancelled" style="color:#dc2626">0</b><span>বাতিল</span></div>
+      </div>
+
+      <div class="page-title">কুইক অ্যাকশন</div>
+      <div class="quick-actions">
+        <button id="dashTestOrder" class="q-btn" style="color:var(--primary)">＋ টেস্ট অর্ডার</button>
+        <button id="dashExportCsv" class="q-btn">⬇ CSV ডাউনলোড</button>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div class="page-title" style="margin:0;color:#d97706">⏳ পেন্ডিং অর্ডারসমূহ (<span id="dashPendingCount">0</span>)</div>
+        <button id="goToOrdersBtn" style="border:0;background:transparent;color:var(--primary);font-weight:700;font-size:12px">সকল অর্ডার →</button>
+      </div>
+      <div id="pendingOrdersList"></div>
+    </section>
+
+    <!-- TAB 2: ORDERS (ALL ORDERS) -->
+    <section id="viewOrders" class="hidden">
+      <div class="search-wrapper">
+        <input id="orderSearch" class="input" placeholder="আইডি, নাম, ফোন দিয়ে খুঁজুন...">
+        <select id="colorFilter" class="select" style="max-width:130px"><option value="all">সকল কালার</option></select>
+      </div>
+      <div class="pill-list" id="statusPills"></div>
+      <div id="fullOrdersList" style="margin-top:8px"></div>
+    </section>
+
+    <!-- TAB 3: SETTINGS -->
+    <section id="viewSettings" class="hidden">
+      <div class="settings-box">
+        <h3>🚚 Steadfast Courier API</h3>
+        <p style="font-size:12px;color:var(--ink-soft);margin-top:0">Steadfast মার্চেন্ট অ্যাকাউন্ট থেকে API ও Secret Key সংগ্রহ করুন।</p>
+        <form id="steadfastForm">
+          <label style="font-size:12px;font-weight:700">API Key</label>
+          <input id="sfApiKey" class="input" style="margin:4px 0 10px" placeholder="Steadfast API Key" required>
+          <label style="font-size:12px;font-weight:700">Secret Key</label>
+          <input id="sfSecretKey" class="input" type="password" style="margin:4px 0 10px" placeholder="Steadfast Secret Key" required>
+          <label style="font-size:12px;font-weight:700">Base URL</label>
+          <input id="sfBaseUrl" class="input" style="margin:4px 0 12px" value="https://portal.steadfast.com.bd/api/v1">
+          <div style="display:flex;gap:8px">
+            <button class="btn-sf" style="flex:1;padding:10px" type="submit">সংরক্ষণ করুন</button>
+            <button class="btn-mini" style="background:#f1f5f9;padding:10px;font-size:12px" type="button" id="btnTestSfConnection">🔍 ব্যালেন্স চেক</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="settings-box">
+        <h3>📊 Meta Pixel</h3>
+        <form id="pixelForm">
+          <label style="font-size:12px;font-weight:700">Pixel ID</label>
+          <input id="pixelId" class="input" style="margin:4px 0 14px" placeholder="123456789012345">
+          <button class="btn-sf" style="width:100%;padding:10px;background:var(--ink)" type="submit">Pixel সংরক্ষণ করুন</button>
+        </form>
+      </div>
+
+      <button id="logoutBtn" class="q-btn" style="width:100%;color:#dc2626;border-color:#fecaca;padding:12px">
+        🚪 অ্যাকাউন্ট থেকে লগআউট
+      </button>
+    </section>
+  </main>
+
+  <footer class="bottom-nav">
+    <button class="nav-item active" id="navDashboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="9" rx="1"></rect><rect x="14" y="3" width="7" height="5" rx="1"></rect><rect x="14" y="12" width="7" height="9" rx="1"></rect><rect x="3" y="16" width="7" height="5" rx="1"></rect></svg>
+      <span>ড্যাশবোর্ড</span>
+    </button>
+    <button class="nav-item" id="navOrders">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+      <span>অর্ডারসমূহ</span>
+    </button>
+    <button class="nav-item" id="navSettings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+      <span>সেটিংস</span>
+    </button>
+  </footer>
+</div>
+
+<div id="invoiceModal" class="modal-overlay hidden"><div class="modal-card" id="invoiceCard"></div></div>
+<div id="toast" class="toast-bar hidden"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import {
+  getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc, setDoc, getDoc
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCDf94QYSMq8nwD8LxQXXxXKL4X7HUdGdE",
+  authDomain: "gen-lang-client-0701437737.firebaseapp.com",
+  projectId: "gen-lang-client-0701437737",
+  storageBucket: "gen-lang-client-0701437737.firebasestorage.app",
+  messagingSenderId: "591408408586",
+  appId: "1:591408408586:web:e7aa79caace076b06e17f3"
+};
+const FIRESTORE_DATABASE_ID = "ai-studio-remixraimafashio-db7973e6-ea9d-4e29-a6b9-47ca080043e8";
+const ADMIN_PIN = "1234";
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app, FIRESTORE_DATABASE_ID);
+
+const variants = Array.from({length: 11}, (_, i) => `D${i + 1}`);
+const statusList = ["Pending", "Confirmed", "Processing", "Shipped", "Delivered", "Cancelled"];
+const bnStatus = { Pending: "পেন্ডিং", Confirmed: "কনফার্মড", Processing: "প্রসেসিং", Shipped: "শিপড", Delivered: "ডেলিভার্ড", Cancelled: "বাতিল" };
+
+let orders = [], activeFilter = "all", sfConfig = {};
+const $ = id => document.getElementById(id);
+
+function toast(msg, err = false) {
+  const t = $("toast");
+  t.textContent = msg;
+  t.className = "toast-bar" + (err ? " err" : "");
+  t.classList.remove("hidden");
+  clearTimeout(window.__t);
+  window.__t = setTimeout(() => t.classList.add("hidden"), 3200);
+}
+
+function money(v) { return "৳ " + Number(v || 0).toLocaleString("en-US"); }
+function escapeHtml(v) { return String(v ?? "").replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[m])); }
+
+// Phone sanitization strictly for Steadfast: must be 11 digits starting with 01
+function formatPhoneForSteadfast(p) {
+  let s = String(p || "").replace(/\D/g, "");
+  if (s.startsWith("880")) s = s.slice(2);
+  else if (s.startsWith("88")) s = s.slice(2);
+  else if (!s.startsWith("0") && s.length === 10) s = "0" + s;
+  return s.slice(-11);
+}
+
+// Authentication
+function handleLogin() {
+  if ($("pinInput").value === ADMIN_PIN) {
+    sessionStorage.setItem("fg_mobile_admin", "1");
+    initConsole();
+  } else {
+    $("pinErr").textContent = "ভুল পিন! সঠিক পিন দিন।";
+  }
+}
+$("pinSubmit").onclick = handleLogin;
+$("pinInput").onkeydown = e => { if (e.key === "Enter") handleLogin(); };
+$("logoutBtn").onclick = () => { sessionStorage.removeItem("fg_mobile_admin"); location.reload(); };
+
+if (sessionStorage.getItem("fg_mobile_admin") === "1") initConsole();
+
+function initConsole() {
+  $("loginSection").classList.add("hidden");
+  $("mainApp").classList.remove("hidden");
+
+  variants.forEach(v => {
+    const opt = document.createElement("option");
+    opt.value = v; opt.textContent = "কালার " + v;
+    $("colorFilter").appendChild(opt);
+  });
+
+  renderStatusPills();
+  listenOrders();
+  loadSteadfastConfig();
+}
+
+function renderStatusPills() {
+  const tabs = [["all", "সব"], ...statusList.map(s => [s, bnStatus[s]])];
+  $("statusPills").innerHTML = tabs.map(([k, label]) => `
+    <button class="pill ${k === activeFilter ? 'active' : ''}" data-status="${k}">
+      ${label} (<span id="p-${k}">0</span>)
+    </button>
+  `).join('');
+
+  document.querySelectorAll(".pill").forEach(b => {
+    b.onclick = () => {
+      activeFilter = b.dataset.status;
+      document.querySelectorAll(".pill").forEach(p => p.classList.toggle("active", p === b));
+      renderOrdersView();
+    };
+  });
+}
+
+function listenOrders() {
+  onSnapshot(collection(db, "orders"), snap => {
+    orders = snap.docs.map(d => {
+      const data = d.data();
+      const st = (data.status && statusList.includes(data.status)) ? data.status : "Pending";
+      return { id: d.id, ...data, status: st };
+    }).sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+
+    updateDashboardMetrics();
+    renderOrdersView();
+  }, err => {
+    console.error(err);
+    toast("ডেটাবেজ লোড ব্যর্থ", true);
+  });
+}
+
+function updateDashboardMetrics() {
+  // Revenue is ONLY for Delivered Orders
+  const deliveredOrders = orders.filter(o => o.status === "Delivered");
+  const rev = deliveredOrders.reduce((sum, o) => sum + Number(o.totalAmount || 0), 0);
+  $("dashRevenue").textContent = money(rev);
+
+  $("cntTotal").textContent = orders.length;
+  statusList.forEach(s => {
+    const cnt = orders.filter(o => o.status === s).length;
+    if ($("cnt" + s)) $("cnt" + s).textContent = cnt;
+    if ($("p-" + s)) $("p-" + s).textContent = cnt;
+  });
+  if ($("p-all")) $("p-all").textContent = orders.length;
+
+  // ONLY PENDING ORDERS DISPLAYED ON DASHBOARD
+  const pendingOrders = orders.filter(o => o.status === "Pending");
+  $("dashPendingCount").textContent = pendingOrders.length;
+  
+  const container = $("pendingOrdersList");
+  if (!pendingOrders.length) {
+    container.innerHTML = `
+      <div style="text-align:center;padding:26px 16px;background:#ffffff;border:1px dashed var(--border);border-radius:12px;color:var(--ink-soft);font-size:12.5px">
+        🎉 কোনো নতুন পেন্ডিং অর্ডার নেই! সব অর্ডার প্রসেস করা হয়েছে।
+      </div>
+    `;
+  } else {
+    container.innerHTML = pendingOrders.map(renderCard).join("");
+    attachCardEvents();
+  }
+}
+
+function renderOrdersView() {
+  const q = $("orderSearch").value.trim().toLowerCase();
+  const c = $("colorFilter").value;
+
+  const filtered = orders.filter(o => {
+    if (activeFilter !== "all" && o.status !== activeFilter) return false;
+    if (c !== "all" && o.selectedColor !== c) return false;
+    if (!q) return true;
+    return [o.orderId, o.customerName, o.phone, o.address, o.steadfastTracking].some(x => String(x || "").toLowerCase().includes(q));
+  });
+
+  const container = $("fullOrdersList");
+  if (!filtered.length) {
+    container.innerHTML = `<div style="text-align:center;padding:36px;color:var(--muted);font-size:13px">কোনো অর্ডার পাওয়া যায়নি</div>`;
+    return;
+  }
+  container.innerHTML = filtered.map(renderCard).join("");
+  attachCardEvents();
+}
+
+// Card Background: 20% Opacity Color by Stage
+function renderCard(o) {
+  const phone = escapeHtml(o.phone);
+  const cleanPhone = formatPhoneForSteadfast(o.phone);
+  const wa = `https://wa.me/88${cleanPhone}?text=${encodeURIComponent(`আসসালামু আলাইকুম ${o.customerName}, Fashion Gallery থেকে অর্ডার #${o.orderId} প্রসঙ্গে।`)}`;
+  const img = `./images/variants/${String(o.selectedColor || "D1").toLowerCase()}.png`;
+
+  const sfBooked = Boolean(o.steadfastTracking || o.steadfastConsignmentId);
+  const sfHtml = sfBooked
+    ? `<span class="sf-pill">✓ SF: ${escapeHtml(o.steadfastTracking || o.steadfastConsignmentId)}</span>`
+    : `<button class="btn-sf" data-sf="${escapeHtml(o.orderId)}">🚚 Steadfast এ পাঠান</button>`;
+
+  const stageClass = `stage-${escapeHtml(o.status || 'Pending')}`;
+  const badgeClass = `badge-${escapeHtml(o.status || 'Pending')}`;
+
+  return `
+    <div class="order-card ${stageClass}">
+      <div class="card-top">
+        <span class="id-badge">#${escapeHtml(o.orderId)}</span>
+        <span class="status-tag ${badgeClass}">${escapeHtml(bnStatus[o.status] || "পেন্ডিং")}</span>
+      </div>
+      <div class="card-body">
+        <div class="cust-info">
+          <div class="cust-name">${escapeHtml(o.customerName)}</div>
+          <a class="cust-phone" href="tel:${phone}">📞 ${phone}</a> · <a class="cust-phone" style="color:#059669" href="${wa}" target="_blank">WhatsApp</a>
+          <div class="cust-address" title="${escapeHtml(o.address)}">📍 ${escapeHtml(o.address)}</div>
+        </div>
+        <div class="order-meta">
+          <img src="${img}" onerror="this.style.display='none'">
+          <div class="order-price">
+            <b>${money(o.totalAmount)}</b>
+            <span>${escapeHtml(o.selectedColor)} (${escapeHtml(o.quantity)}টি)</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div>${sfHtml}</div>
+        <div class="action-btns">
+          <select class="select" style="width:auto;padding:2px 6px;font-size:11px;font-weight:700" data-status-change="${escapeHtml(o.orderId)}">
+            ${statusList.map(s => `<option value="${s}" ${o.status === s ? 'selected' : ''}>${bnStatus[s]}</option>`).join('')}
+          </select>
+          <button class="btn-mini" data-invoice="${escapeHtml(o.orderId)}">🖨</button>
+          <button class="btn-mini" style="color:#dc2626" data-del="${escapeHtml(o.orderId)}">🗑</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function attachCardEvents() {
+  document.querySelectorAll("[data-status-change]").forEach(el => el.onchange = e => updateOrderStatus(e.target.dataset.statusChange, e.target.value));
+  document.querySelectorAll("[data-del]").forEach(el => el.onclick = () => deleteOrder(el.dataset.del));
+  document.querySelectorAll("[data-invoice]").forEach(el => el.onclick = () => showInvoice(orders.find(o => o.orderId === el.dataset.invoice)));
+  document.querySelectorAll("[data-sf]").forEach(el => el.onclick = () => sendToSteadfast(el.dataset.sf, el));
+}
+
+async function updateOrderStatus(id, status) {
+  try {
+    await updateDoc(doc(db, "orders", id), { status });
+    toast(`স্ট্যাটাস: ${bnStatus[status]}`);
+  } catch (e) { toast("আপডেট ব্যর্থ", true); }
+}
+
+async function deleteOrder(id) {
+  if (!confirm(`অর্ডার #${id} মুছে ফেলবেন?`)) return;
+  try {
+    await deleteDoc(doc(db, "orders", id));
+    toast("অর্ডার মুছে ফেলা হয়েছে");
+  } catch (e) { toast("মুছতে সমস্যা হয়েছে", true); }
+}
+
+// -------------------------------------------------------------
+// STEADFAST ROBUST API CLIENT (CORS BYPASS ENGINE)
+// -------------------------------------------------------------
+async function dispatchToSteadfast(endpoint, method = "POST", bodyData = null) {
+  const headers = {
+    "Content-Type": "application/json",
+    "Api-Key": sfConfig.apiKey,
+    "Secret-Key": sfConfig.secretKey
+  };
+
+  const payloadString = bodyData ? JSON.stringify(bodyData) : null;
+
+  // Layer 1: CodeTabs CORS Proxy (Bypasses preflight restrictions & transfers custom headers cleanly)
+  try {
+    const proxyUrl = "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(endpoint);
+    const res = await fetch(proxyUrl, {
+      method,
+      headers,
+      body: payloadString
+    });
+    if (res.ok) {
+      const json = await res.json();
+      return json;
+    }
+  } catch (err1) {
+    console.warn("Proxy 1 failed, trying fallback...", err1);
+  }
+
+  // Layer 2: AllOrigins Backup
+  try {
+    const backupUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(endpoint);
+    const res2 = await fetch(backupUrl, {
+      method,
+      headers,
+      body: payloadString
+    });
+    if (res2.ok) {
+      return await res2.json();
+    }
+  } catch (err2) {
+    console.warn("Proxy 2 failed, trying direct...", err2);
+  }
+
+  // Layer 3: Direct Fetch Attempt
+  const res3 = await fetch(endpoint, {
+    method,
+    headers,
+    body: payloadString
+  });
+  return await res3.json();
+}
+
+// 1-Click Send To Steadfast
+async function sendToSteadfast(id, btnElement) {
+  if (!sfConfig.apiKey || !sfConfig.secretKey) {
+    alert("আগে সেটিংস ট্যাবে গিয়ে Steadfast API Key এবং Secret Key সেভ করুন!");
+    switchAppTab("settings");
+    return;
+  }
+
+  const o = orders.find(x => x.orderId === id);
+  if (!o) return;
+
+  // Strict Phone Validation: 11 Digits
+  const formattedPhone = formatPhoneForSteadfast(o.phone);
+  if (formattedPhone.length !== 11 || !formattedPhone.startsWith("01")) {
+    alert(`গ্রাহকের মোবাইল নম্বর সঠিক নয়: "${o.phone}"\nSteadfast-এর জন্য সঠিক ১১ ডিজিটের নম্বর দিন (যেমন: 01712345678)`);
+    return;
+  }
+
+  // Strict Address Validation: Steadfast requires at least 10 characters
+  let address = String(o.address || "").trim();
+  if (address.length < 10) {
+    address = address + ", Bangladesh";
+  }
+
+  if (!confirm(`অর্ডার #${o.orderId} কি Steadfast এ কনসাইনমেন্ট করবেন?`)) return;
+
+  if (btnElement) {
+    btnElement.disabled = true;
+    btnElement.textContent = "পাঠানো হচ্ছে...";
+  }
+  toast("Steadfast-এ প্রসেস হচ্ছে...");
+
+  const payload = {
+    invoice: String(o.orderId),
+    recipient_name: String(o.customerName || "Customer").slice(0, 80),
+    recipient_phone: formattedPhone,
+    recipient_address: address,
+    cod_amount: Number(o.totalAmount || 0),
+    note: String(o.note || `FG Shari - ${o.selectedColor || 'D1'}`).slice(0, 100)
+  };
+
+  const endpoint = `${(sfConfig.baseUrl || "https://portal.steadfast.com.bd/api/v1").replace(/\/+$/, '')}/create_order`;
+
+  try {
+    const data = await dispatchToSteadfast(endpoint, "POST", payload);
+
+    if (data && (data.status === 200 || data.consignment)) {
+      const c = data.consignment || {};
+      await updateDoc(doc(db, "orders", id), {
+        steadfastConsignmentId: c.consignment_id || "BOOKED",
+        steadfastTracking: c.tracking_code || "",
+        status: "Shipped",
+        steadfastSyncedAt: new Date().toISOString()
+      });
+      alert(`🎉 সফলভাবে বুক হয়েছে!\nConsignment ID: ${c.consignment_id || ''}\nTracking Code: ${c.tracking_code || ''}`);
+      toast("Steadfast-এ সফল বুকিং সম্পন্ন!");
+    } else {
+      let errMsg = data?.message || "";
+      if (data?.errors) {
+        errMsg += " " + Object.values(data.errors).flat().join(", ");
+      }
+      alert("Steadfast রিজেক্ট করেছে:\n" + (errMsg || "অনুগ্রহ করে API Key ও তথ্য পুনরায় যাচাই করুন।"));
+      toast("Steadfast এ যায়নি", true);
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Steadfast API সংযোগ ব্যর্থ হয়েছে। আপনার ইন্টারনেট কানেকশন বা API Key চেক করুন।");
+    toast("Steadfast সংযোগ ব্যর্থ", true);
+  } finally {
+    if (btnElement) {
+      btnElement.disabled = false;
+      btnElement.textContent = "🚚 Steadfast এ পাঠান";
+    }
+  }
+}
+
+// Steadfast Balance & Connection Test
+$("btnTestSfConnection").onclick = async () => {
+  const key = $("sfApiKey").value.trim();
+  const secret = $("sfSecretKey").value.trim();
+  const base = $("sfBaseUrl").value.trim() || "https://portal.steadfast.com.bd/api/v1";
+
+  if (!key || !secret) {
+    alert("আগে API Key ও Secret Key লিখুন!");
+    return;
+  }
+
+  toast("ব্যালেন্স চেক করা হচ্ছে...");
+  sfConfig.apiKey = key;
+  sfConfig.secretKey = secret;
+  sfConfig.baseUrl = base;
+
+  const endpoint = `${base.replace(/\/+$/, '')}/get_balance`;
+
+  try {
+    const data = await dispatchToSteadfast(endpoint, "GET");
+    if (data && (data.status === 200 || data.current_balance !== undefined)) {
+      alert(`✅ Steadfast সংযোগ সফল!\nবর্তমান ব্যালেন্স: ৳ ${data.current_balance ?? 0}`);
+      toast("কানেকশন সফল!");
+    } else {
+      alert("সংযোগ ব্যর্থ: " + (data?.message || "ভুল API Key বা Secret Key দেওয়া হয়েছে।"));
+    }
+  } catch (e) {
+    alert("সার্ভারে পৌঁছানো যায়নি। অনুগ্রহ করে API credentials ঠিক আছে কিনা দেখুন।");
+  }
+};
+
+// Steadfast Config
+async function loadSteadfastConfig() {
+  try {
+    const snap = await getDoc(doc(db, "settings", "steadfast"));
+    if (snap.exists()) {
+      sfConfig = snap.data();
+      $("sfApiKey").value = sfConfig.apiKey || "";
+      $("sfSecretKey").value = sfConfig.secretKey || "";
+      $("sfBaseUrl").value = sfConfig.baseUrl || "https://portal.steadfast.com.bd/api/v1";
+    }
+  } catch (e) {}
+}
+$("steadfastForm").onsubmit = async (e) => {
+  e.preventDefault();
+  sfConfig = {
+    apiKey: $("sfApiKey").value.trim(),
+    secretKey: $("sfSecretKey").value.trim(),
+    baseUrl: $("sfBaseUrl").value.trim() || "https://portal.steadfast.com.bd/api/v1"
+  };
+  try {
+    await setDoc(doc(db, "settings", "steadfast"), sfConfig, { merge: true });
+    toast("Steadfast সেটিংস সেভ হয়েছে");
+  } catch (e) { toast("সেভ ব্যর্থ", true); }
+};
+
+// Navigation
+function switchAppTab(tabName) {
+  $("viewDashboard").classList.toggle("hidden", tabName !== "dashboard");
+  $("viewOrders").classList.toggle("hidden", tabName !== "orders");
+  $("viewSettings").classList.toggle("hidden", tabName !== "settings");
+
+  $("navDashboard").classList.toggle("active", tabName === "dashboard");
+  $("navOrders").classList.toggle("active", tabName === "orders");
+  $("navSettings").classList.toggle("active", tabName === "settings");
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+$("navDashboard").onclick = () => switchAppTab("dashboard");
+$("navOrders").onclick = () => switchAppTab("orders");
+$("navSettings").onclick = () => switchAppTab("settings");
+$("goToOrdersBtn").onclick = () => switchAppTab("orders");
+
+$("orderSearch").oninput = renderOrdersView;
+$("colorFilter").onchange = renderOrdersView;
+$("refreshBtn").onclick = () => { toast("ডাটা রিফ্রেশ করা হয়েছে"); };
+
+// Pending Test Order
+$("dashTestOrder").onclick = async () => {
+  const v = variants[Math.floor(Math.random() * variants.length)];
+  const id = "FG-" + Math.floor(100000 + Math.random() * 900000);
+  const testObj = {
+    orderId: id, customerName: "পেন্ডিং টেস্ট কাস্টমার", phone: "01711223344", address: "ধানমন্ডি ২৭, ঢাকা",
+    selectedColor: v, quantity: 1, unitPrice: 950, shippingCost: 70, totalAmount: 1020,
+    status: "Pending", orderDate: new Date().toLocaleDateString("bn-BD"), createdAt: new Date().toISOString()
+  };
+  try {
+    await setDoc(doc(db, "orders", id), testObj);
+    toast("পেন্ডিং টেস্ট অর্ডার তৈরি হয়েছে");
+  } catch (e) { toast("ব্যর্থ", true); }
+};
+
+// CSV Export
+$("dashExportCsv").onclick = () => {
+  if (!orders.length) return toast("কোনো অর্ডার নেই", true);
+  const rows = [["Order ID", "Date", "Customer", "Phone", "Address", "Color", "Total", "Status", "Steadfast_Code"]];
+  orders.forEach(o => rows.push([o.orderId, o.orderDate || "", o.customerName, o.phone, `"${(o.address || "").replace(/"/g, '""')}"`, o.selectedColor, o.totalAmount, o.status, o.steadfastTracking || ""]));
+  const csv = "\uFEFF" + rows.map(r => r.join(",")).join("\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8;" }));
+  a.download = `FashionGallery_Orders_${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+};
+
+// Invoice Modal
+function showInvoice(o) {
+  if (!o) return;
+  $("invoiceCard").innerHTML = `
+    <div style="display:flex;justify-content:space-between;border-bottom:1px solid #e2e8f0;padding-bottom:6px">
+      <div><b>Fashion Gallery</b><br><small style="color:var(--muted)">ঢাকা</small></div>
+      <div style="text-align:right"><b>মেমো</b><br><small style="color:var(--muted)">#${escapeHtml(o.orderId)}</small></div>
+    </div>
+    <div style="font-size:12px;margin:8px 0">
+      <b>${escapeHtml(o.customerName)}</b> (${escapeHtml(o.phone)})<br>
+      ${escapeHtml(o.address)}
+    </div>
+    <div style="border-top:1px solid #e2e8f0;border-bottom:1px solid #e2e8f0;padding:6px 0;font-size:12px;display:flex;justify-content:space-between">
+      <span>শাড়ি (${escapeHtml(o.selectedColor)}) x ${escapeHtml(o.quantity)}</span>
+      <b>${money(o.totalAmount)}</b>
+    </div>
+    <div class="no-print" style="margin-top:14px;display:flex;gap:6px">
+      <button class="btn-sf" style="flex:1" onclick="window.print()">🖨 প্রিন্ট</button>
+      <button class="btn-mini" onclick="$('invoiceModal').classList.add('hidden')">বন্ধ</button>
+    </div>
+  `;
+  $("invoiceModal").classList.remove("hidden");
+}
+$("invoiceModal").onclick = e => { if (e.target.id === "invoiceModal") $("invoiceModal").classList.add("hidden"); };
+</script>
+</body>
+      </html>
